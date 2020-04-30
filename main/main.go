@@ -8,9 +8,12 @@ import (
 )
 
 func main() {
-	bls.Init(bls.BLS12_381)
+	err := bls.Init(bls.BLS12_381)
+	if err != nil {
+		panic(fmt.Sprintf("ERROR: %s", err))
+	}
 
-	// generate BLS keys and signs
+	// generate BLS keys and signatures
 	message := []byte("hello, world")
 	keyCount := 10
 	sKeys := make([]bls.SecretKey, keyCount)
