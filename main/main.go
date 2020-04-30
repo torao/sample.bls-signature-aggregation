@@ -12,6 +12,10 @@ func main() {
 	if err != nil {
 		panic(fmt.Sprintf("ERROR: %s", err))
 	}
+	err = bls.SetETHmode(bls.EthModeLatest)
+	if err != nil {
+		panic(fmt.Sprintf("ERROR: %s", err))
+	}
 
 	// generate BLS keys and signatures
 	message := []byte("hello, world")
