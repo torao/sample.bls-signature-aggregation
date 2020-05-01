@@ -25,21 +25,16 @@ var AggregateNumbers = []int{
 func BenchmarkBLS(b *testing.B) {
 	bls.Init(bls.BLS12_381)
 
-	b.Run("Private Key Generation", func(b *testing.B) {
+	b.Run("Key-Pair Generation", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			privateKey := bls.SecretKey{}
 			privateKey.SetByCSPRNG()
+			privateKey.GetPublicKey()
 		}
 	})
 
 	privateKey := bls.SecretKey{}
 	privateKey.SetByCSPRNG()
-	b.Run("Public Key Generation", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
-			privateKey.GetPublicKey()
-		}
-	})
-
 	b.Run("Sign", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			privateKey.SignByte(Message)
@@ -127,24 +122,21 @@ func BenchmarkBLS(b *testing.B) {
 
 func BenchmarkEd25519(b *testing.B) {
 
-	seed := make([]byte, ed25519.SeedSize)
-	b.Run("Private Key Generation", func(b *testing.B) {
+	b.Run("Key-Pair Generation", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			ed25519.NewKeyFromSeed(seed)
+			ed25519.GenerateKey(rand.Reader)
 		}
 	})
 
-	privateKey := ed25519.NewKeyFromSeed(seed)
-	b.Run("Public Key Generation", func(b *testing.B) {
-		privateKey.Public()
-	})
-
+	publicKey, privateKey, err := ed25519.GenerateKey(rand.Reader)
+	if err != nil {
+		panic("Ed25519 key generation failed!")
+	}
 	b.Run("Sign", func(b *testing.B) {
 		ed25519.Sign(privateKey, Message)
 	})
 
 	signature := ed25519.Sign(privateKey, Message)
-	publicKey := privateKey.Public().(ed25519.PublicKey)
 	b.Run("Verify", func(b *testing.B) {
 		ed25519.Verify(publicKey, Message, signature)
 	})
@@ -158,9 +150,10 @@ func BenchmarkECDSA(b *testing.B) {
 
 	p256 := elliptic.P256()
 	seed := rand.Reader
-	b.Run("Private Key Generation", func(b *testing.B) {
+	b.Run("Key-Pair Generation", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			ecdsa.GenerateKey(p256, seed)
+			privateKey, _ := ecdsa.GenerateKey(p256, seed)
+			privateKey.Public()
 		}
 	})
 
@@ -168,10 +161,6 @@ func BenchmarkECDSA(b *testing.B) {
 	if err != nil {
 		panic("ECDSA key generation failed!")
 	}
-	b.Run("Public Key Generation", func(b *testing.B) {
-		privateKey.Public()
-	})
-
 	b.Run("Sign", func(b *testing.B) {
 		ecdsa.Sign(seed, privateKey, Message)
 	})
