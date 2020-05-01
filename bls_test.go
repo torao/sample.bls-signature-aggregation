@@ -118,6 +118,9 @@ func BenchmarkBLS(b *testing.B) {
 			panic("BLS aggregated signature verification by aggregated public key failed!")
 		}
 	}
+
+	fmt.Printf("[BLS] private key: %d bytes, public key: %d bytes, signature: %d bytes\n",
+		len(privateKey.Serialize()), len(publicKey.Serialize()), len(signature.Serialize()))
 }
 
 func BenchmarkEd25519(b *testing.B) {
@@ -144,6 +147,9 @@ func BenchmarkEd25519(b *testing.B) {
 	if !ed25519.Verify(publicKey, Message, signature) {
 		panic("Ed25519 verification failed!")
 	}
+
+	fmt.Printf("[Ed25519] private key: %d bytes, public key: %d bytes, signature: %d bytes\n",
+		len(privateKey), len(publicKey), len(signature))
 }
 
 func BenchmarkECDSA(b *testing.B) {
@@ -179,4 +185,9 @@ func BenchmarkECDSA(b *testing.B) {
 	if !ecdsa.Verify(publicKey, Message, r, s) {
 		panic("ECDSA verification failed!")
 	}
+
+	fmt.Printf("[ECDSA] private key: %d bytes, public key: %d bytes, signature: %d bytes\n",
+		len(privateKey.D.Bytes())+len(privateKey.X.Bytes())+len(privateKey.Y.Bytes()),
+		len(publicKey.Y.Bytes())+len(publicKey.X.Bytes()),
+		len(signature))
 }

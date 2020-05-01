@@ -8,6 +8,9 @@ This is a repository for creating sample code to perform "BLS signature aggregat
 
 See [main.go](main/main.go) for the specific code. The following is the result of the execution.
 
+<details><summary>▶ $ go run ./main</summary>
+<p>
+
 ```
 $ go run ./main
 private key[0] := 52baaa129be27188fcbd7334... (size=32)
@@ -45,3 +48,40 @@ verify aggregated signature by all public keys: true
 aggregated public key := b601df9d672f160dc17c65a2... (size=48)
 verify aggregated signature by aggregated public key: true
 ```
+
+</p>
+</details>
+
+In aggregated signature and public key, I generated 10 key-pairs, created 10 signatures for one message, and aggregated them into a single signature. It's able to verify the aggregated signature using 10 public keys or one public key that aggregates them.
+
+The order in which signatures are aggregated and the order of public keys has no effect on verification.
+
+## Key and Signature Size Comparison
+
+| Data | BLS | Ed25519 | ECDSA (p256) |
+|:-----|-----:|----:|----:|
+| Private Key | 32 bytes | 64 bytes | 96 bytes |
+| Public Key | 48 bytes | 32 bytes | 64 bytes |
+| Signature | 96 bytes | 64 bytes | 64 bytes |
+| Aggregated Signature | 96 bytes | - | - |
+| Aggregated Public Key | 48 bytes | - | - |
+
+The table above shows that aggregated public key and aggregated signature have the same size as regular public key and signature.
+
+## Comparison with other elliptic-curve cryptography
+
+Follows are the execution times for 1) key-pair generation, 2) signing with a single private key, and 3) verifying a single signature with a single public key by [bls_test.go](https://github.com/torao/sample.bls-signature-aggregation/blob/master/bls_test.go):
+
+| | BLS | Ed25519 | ECDSA (p256) |
+|:----------------|-------------:|----------:|----------:|
+| Key-Pair Generation | 851ns            | 46,535ns | 15,773ns |
+| Sign                   | 568,114ns     | < 1ns           | < 1ns          |
+| Verify                 | 1,394,315ns | < 1ns            | < 1ns          |
+
+BLS signature is faster than ed25519 and ECDSA in generating key-pair but takes longer to sign and verify.
+
+## Execution times relative to the number of keys and signatures
+
+The time for signatures and public keys aggregation increases in proportion to their number. However, the verification for the aggregated signature is completed in constant time.
+
+![4528009632284672](https://user-images.githubusercontent.com/836654/80785563-af097800-8bbb-11ea-9568-e3584dd6cb8d.png)
