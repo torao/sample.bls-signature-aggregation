@@ -8,45 +8,56 @@ This is a repository for creating sample code to perform "BLS signature aggregat
 
 See [main.go](main/main.go) for the specific code. The following is the result of the execution.
 
-<details><summary>▶ $ go run ./main</summary>
+<details><summary>▶ $ go test -bench . -benchmem</summary>
 <p>
 
 ```
-$ go run ./main
-private key[0] := 52baaa129be27188fcbd7334... (size=32)
-public key [0] := 8a5cd776a5065269e586681f... (size=48)
-signature  [0] := a1d4c1f860abfb1f59495c6c... (size=96, verify=true)
-private key[1] := 11faabcff74ff1f802098b8a... (size=32)
-public key [1] := 956037493463611e17c27a0f... (size=48)
-signature  [1] := 95e7cbe739a6e7d4e519ab99... (size=96, verify=true)
-private key[2] := 72ae23fa291c7a4b917b0b51... (size=32)
-public key [2] := 8dd19344e6d2cd1ec57244e4... (size=48)
-signature  [2] := 896b5e0a0334c8b96ae789b0... (size=96, verify=true)
-private key[3] := 2b3826ca7c1d25237006db79... (size=32)
-public key [3] := 83fb82ae5c682b8883ad7c7d... (size=48)
-signature  [3] := a527a169b3bc0252d476a283... (size=96, verify=true)
-private key[4] := 25fd7b4cd3d2738a7034cf41... (size=32)
-public key [4] := 92460e922bf0ef0a4755b46e... (size=48)
-signature  [4] := 99e7c21d298169829734ec99... (size=96, verify=true)
-private key[5] := 3f1d9c4eb81e21f306c877fa... (size=32)
-public key [5] := a7ecc66d6bb4123ef885e4af... (size=48)
-signature  [5] := 874d952ed2954c78a528ae84... (size=96, verify=true)
-private key[6] := 0575cce0cbfee75f3200f577... (size=32)
-public key [6] := 858f5529373da0bf2ac70836... (size=48)
-signature  [6] := aca1e26c209dba8d3fa51445... (size=96, verify=true)
-private key[7] := 1c7d951329549ab48ca4f151... (size=32)
-public key [7] := b413f70c0c398dff9deea31a... (size=48)
-signature  [7] := b62bd051b99b4b80f908c343... (size=96, verify=true)
-private key[8] := 080d646795fb929244aca531... (size=32)
-public key [8] := b6eb49a944d94dcb3190dbdd... (size=48)
-signature  [8] := a803bdf7c0035726d3862a1a... (size=96, verify=true)
-private key[9] := 12ff25b419b1a99299077015... (size=32)
-public key [9] := b70714b8f85d865e2c8c1590... (size=48)
-signature  [9] := a0e228afc8194cb9fc40e553... (size=96, verify=true)
-aggregated signature := 92c61cce4631726fb171f6b9... (size=96)
-verify aggregated signature by all public keys: true
-aggregated public key := b601df9d672f160dc17c65a2... (size=48)
-verify aggregated signature by aggregated public key: true
+$ go test -bench . -benchmem
+goos: darwin
+goarch: amd64
+BenchmarkBLS/Key-Pair_Generation-8                 16455             73486 ns/op             176 B/op          2 allocs/op
+BenchmarkBLS/Sign-8                                 2144            552673 ns/op             336 B/op          3 allocs/op
+BenchmarkBLS/Verify-8                                830           1386782 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Signatures_Aggregation[1]-8        10985703               113 ns/op             288 B/op          1 allocs/op
+BenchmarkBLS/Signatures_Aggregation[2]-8          312457              3441 ns/op             288 B/op          1 allocs/op
+BenchmarkBLS/Signatures_Aggregation[4]-8           62047             20311 ns/op             288 B/op          1 allocs/op
+BenchmarkBLS/Signatures_Aggregation[10]-8           7959            145796 ns/op             288 B/op          1 allocs/op
+BenchmarkBLS/Signatures_Aggregation[21]-8           1725            681825 ns/op             288 B/op          1 allocs/op
+BenchmarkBLS/Signatures_Aggregation[46]-8            352           3459057 ns/op             288 B/op          1 allocs/op
+BenchmarkBLS/Signatures_Aggregation[100]-8            70          16587340 ns/op             288 B/op          1 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[1]-8                  862           1394435 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[2]-8                  834           1393686 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[4]-8                  836           1396647 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[10]-8                 858           1436367 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[21]-8                 816           1413289 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[46]-8                 840           1436811 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[100]-8                820           1453223 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Public_Keys_Aggregation[1]-8                       10384542                97.0 ns/op           144 B/op          1 allocs/op
+BenchmarkBLS/Public_Keys_Aggregation[2]-8                        1663330               727 ns/op             144 B/op          1 allocs/op
+BenchmarkBLS/Public_Keys_Aggregation[4]-8                         582181              2024 ns/op             144 B/op          1 allocs/op
+BenchmarkBLS/Public_Keys_Aggregation[10]-8                        204166              5822 ns/op             144 B/op          1 allocs/op
+BenchmarkBLS/Public_Keys_Aggregation[21]-8                         93244             13091 ns/op             144 B/op          1 allocs/op
+BenchmarkBLS/Public_Keys_Aggregation[46]-8                         39918             29182 ns/op             144 B/op          1 allocs/op
+BenchmarkBLS/Public_Keys_Aggregation[100]-8                        18784             64513 ns/op             144 B/op          1 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[1]_by_Aggregated_Public_Key-8                 861           1402853 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[2]_by_Aggregated_Public_Key-8                 855           1426795 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[4]_by_Aggregated_Public_Key-8                 686           1662080 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[10]_by_Aggregated_Public_Key-8                790           1493050 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[21]_by_Aggregated_Public_Key-8                822           1500175 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[46]_by_Aggregated_Public_Key-8                774           1508392 ns/op              48 B/op          2 allocs/op
+BenchmarkBLS/Aggregated_Signature_Verification[100]_by_Aggregated_Public_Key-8               846           1421861 ns/op              48 B/op          2 allocs/op
+[BLS] private key: 32 bytes, public key: 48 bytes, signature: 96 bytes
+BenchmarkEd25519/Key-Pair_Generation-8                                                     25320             46336 ns/op             128 B/op          3 allocs/op
+BenchmarkEd25519/Sign-8                                                                    25587             47036 ns/op             512 B/op          6 allocs/op
+BenchmarkEd25519/Verify-8                                                                   9686            124300 ns/op             288 B/op          2 allocs/op
+[Ed25519] private key: 64 bytes, public key: 32 bytes, signature: 64 bytes
+BenchmarkECDSA/Key-Pair_Generation-8                                                       80736             14711 ns/op             608 B/op         12 allocs/op
+BenchmarkECDSA/Sign-8                                                                      51530             23724 ns/op            2673 B/op         32 allocs/op
+BenchmarkECDSA/Verify-8                                                                    17085             69779 ns/op             880 B/op         16 allocs/op
+[ECDSA] private key: 96 bytes, public key: 64 bytes, signature: 64 bytes
+PASS
+ok      github.com/herumi/bls-eth-go-binary     51.882s
+
 ```
 
 </p>
@@ -74,9 +85,9 @@ Follows are the execution times for 1) key-pair generation, 2) signing with a si
 
 | | BLS | Ed25519 | ECDSA (p256) |
 |:----------------|-------------:|----------:|----------:|
-| Key-Pair Generation | 851ns            | 46,535ns | 15,773ns |
-| Sign                   | 568,114ns     | < 1ns           | < 1ns          |
-| Verify                 | 1,394,315ns | < 1ns            | < 1ns          |
+| Key-Pair Generation | 73,486ns            | 46,336ns | 14,711ns |
+| Sign                   | 552,673ns     | 47,036ns           | 23,724ns          |
+| Verify                 | 1,386,782ns | 124,300ns            | 69,779ns          |
 
 BLS signature is faster than ed25519 and ECDSA in generating key-pair but takes longer to sign and verify.
 

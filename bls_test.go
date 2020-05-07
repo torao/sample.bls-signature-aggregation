@@ -136,12 +136,16 @@ func BenchmarkEd25519(b *testing.B) {
 		panic("Ed25519 key generation failed!")
 	}
 	b.Run("Sign", func(b *testing.B) {
-		ed25519.Sign(privateKey, Message)
+		for i := 0; i < b.N; i++ {
+			ed25519.Sign(privateKey, Message)
+		}
 	})
 
 	signature := ed25519.Sign(privateKey, Message)
 	b.Run("Verify", func(b *testing.B) {
-		ed25519.Verify(publicKey, Message, signature)
+		for i := 0; i < b.N; i++ {
+			ed25519.Verify(publicKey, Message, signature)
+		}
 	})
 
 	if !ed25519.Verify(publicKey, Message, signature) {
@@ -168,7 +172,9 @@ func BenchmarkECDSA(b *testing.B) {
 		panic("ECDSA key generation failed!")
 	}
 	b.Run("Sign", func(b *testing.B) {
-		ecdsa.Sign(seed, privateKey, Message)
+		for i := 0; i < b.N; i++ {
+			ecdsa.Sign(seed, privateKey, Message)
+		}
 	})
 
 	r, s, err := ecdsa.Sign(rand.Reader, privateKey, Message)
@@ -179,7 +185,9 @@ func BenchmarkECDSA(b *testing.B) {
 	signature = append(signature, s.Bytes()...)
 	publicKey := privateKey.Public().(*ecdsa.PublicKey)
 	b.Run("Verify", func(b *testing.B) {
-		ecdsa.Verify(publicKey, Message, r, s)
+		for i := 0; i < b.N; i++ {
+			ecdsa.Verify(publicKey, Message, r, s)
+		}
 	})
 
 	if !ecdsa.Verify(publicKey, Message, r, s) {
