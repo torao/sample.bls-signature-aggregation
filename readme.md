@@ -68,13 +68,13 @@ The order in which signatures are aggregated and the order of public keys has no
 
 ## Key and Signature Size Comparison
 
-| Data | BLS | Ed25519 | ECDSA (p256) |
+| Data | BLS (ETH2.0) | BLS (IRFT) | Ed25519 | ECDSA (p256) |
 |:-----|-----:|----:|----:|
-| Private Key | 32 bytes | 64 bytes | 96 bytes |
-| Public Key | 48 bytes | 32 bytes | 64 bytes |
-| Signature | 96 bytes | 64 bytes | 64 bytes |
-| Aggregated Signature | 96 bytes | - | - |
-| Aggregated Public Key | 48 bytes | - | - |
+| Private Key | 32 bytes | 32 bytes | 64 bytes | 96 bytes |
+| Public Key | 48 bytes | 96 bytes | 32 bytes | 64 bytes |
+| Signature | 96 bytes | 48 bytes | 64 bytes | 64 bytes |
+| Aggregated Signature | 96 bytes | 48 bytes | - | - |
+| Aggregated Public Key | 48 bytes | 96 bytes | - | - |
 
 The table above shows that aggregated public key and aggregated signature have the same size as regular public key and signature.
 
