@@ -7,7 +7,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"fmt"
-	"github.com/herumi/bls-eth-go-binary/bls"
+	"github.com/herumi/bls-go-binary/bls"
 	"math"
 	"testing"
 )
@@ -139,9 +139,6 @@ func BenchmarkECDSA(b *testing.B) {
 
 func BenchmarkBLSSignatureAggregation(b *testing.B) {
 	if err := bls.Init(bls.BLS12_381); err != nil {
-		panic(err)
-	}
-	if err := bls.SetETHmode(bls.EthModeLatest); err != nil {
 		panic(err)
 	}
 	privateKey := bls.SecretKey{}
