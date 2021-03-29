@@ -94,4 +94,4 @@ BLS signature is faster than ed25519 and ECDSA in generating key-pair but takes 
 
 The time for signatures and public keys aggregation increases in proportion to their number. However, the verification for the aggregated signature is completed in constant time.
 
-![4528009632284672](https://user-images.githubusercontent.com/836654/80785563-af097800-8bbb-11ea-9568-e3584dd6cb8d.png)
+![2021-03-29 macOS i7 2.8GHz](https://user-images.githubusercontent.com/836654/112778933-9a11bf00-9080-11eb-914d-8641a3479caf.png)
