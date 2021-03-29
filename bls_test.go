@@ -5,6 +5,7 @@ import (
 	"crypto/ed25519"
 	"crypto/elliptic"
 	"crypto/rand"
+	"crypto/sha256"
 	"fmt"
 	"github.com/herumi/bls-eth-go-binary/bls"
 	"math"
@@ -23,7 +24,9 @@ var AggregateNumbers = []int{
 }
 
 func BenchmarkBLS(b *testing.B) {
-	bls.Init(bls.BLS12_381)
+	if err := bls.Init(bls.BLS12_381); err != nil {
+		panic(err)
+	}
 
 	b.Run("Key-Pair Generation", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
@@ -51,72 +54,6 @@ func BenchmarkBLS(b *testing.B) {
 
 	if !signature.VerifyByte(publicKey, Message) {
 		panic("BLS verification failed!")
-	}
-
-	privateKeys := make([]bls.SecretKey, 100)
-	publicKeys := make([]*bls.PublicKey, len(privateKeys))
-	signatures := make([]bls.Sign, len(privateKeys))
-	for i := 0; i < len(privateKeys); i++ {
-		privateKeys[i] = bls.SecretKey{}
-		privateKeys[i].SetByCSPRNG()
-		publicKeys[i] = privateKeys[i].GetPublicKey()
-		signatures[i] = *privateKeys[i].SignByte(Message)
-	}
-
-	for _, sigs := range AggregateNumbers {
-		b.Run(fmt.Sprintf("Signatures Aggregation[%d]", sigs), func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				aggregatedSignature := bls.Sign{}
-				for j := 0; j < sigs; j++ {
-					aggregatedSignature.Aggregate(signatures[:sigs])
-				}
-			}
-		})
-	}
-
-	aggregatedSignatures := make([]*bls.Sign, len(AggregateNumbers))
-	for x, sigs := range AggregateNumbers {
-		aggregatedSignatures[x] = &bls.Sign{}
-		aggregatedSignatures[x].Aggregate(signatures[:sigs])
-		publicKeyEntities := make([]bls.PublicKey, sigs)
-		for i := 0; i < sigs; i++ {
-			publicKeyEntities[i] = *publicKeys[i]
-		}
-		b.Run(fmt.Sprintf("Aggregated Signature Verification[%d]", sigs), func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				aggregatedSignatures[x].FastAggregateVerify(publicKeyEntities[:sigs], Message)
-			}
-		})
-		if !aggregatedSignatures[x].FastAggregateVerify(publicKeyEntities[:sigs], Message) {
-			panic("BLS aggregated signature verification failed!")
-		}
-	}
-
-	for _, keys := range AggregateNumbers {
-		b.Run(fmt.Sprintf("Public Keys Aggregation[%d]", keys), func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				aggregatedPublicKey := bls.PublicKey{}
-				for j := 0; j < keys; j++ {
-					aggregatedPublicKey.Add(publicKeys[j])
-				}
-			}
-		})
-	}
-
-	aggregatedPublicKeys := make([]*bls.PublicKey, len(AggregateNumbers))
-	for x, keys := range AggregateNumbers {
-		aggregatedPublicKeys[x] = &bls.PublicKey{}
-		for j := 0; j < keys; j++ {
-			aggregatedPublicKeys[x].Add(publicKeys[j])
-		}
-		b.Run(fmt.Sprintf("Aggregated Signature Verification[%d] by Aggregated Public Key", keys), func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				aggregatedSignatures[x].VerifyByte(aggregatedPublicKeys[x], Message)
-			}
-		})
-		if !aggregatedSignatures[x].VerifyByte(aggregatedPublicKeys[x], Message) {
-			panic("BLS aggregated signature verification by aggregated public key failed!")
-		}
 	}
 
 	fmt.Printf("[BLS] private key: %d bytes, public key: %d bytes, signature: %d bytes\n",
@@ -198,4 +135,116 @@ func BenchmarkECDSA(b *testing.B) {
 		len(privateKey.D.Bytes())+len(privateKey.X.Bytes())+len(privateKey.Y.Bytes()),
 		len(publicKey.Y.Bytes())+len(publicKey.X.Bytes()),
 		len(signature))
+}
+
+func BenchmarkBLSSignatureAggregation(b *testing.B) {
+	if err := bls.Init(bls.BLS12_381); err != nil {
+		panic(err)
+	}
+	if err := bls.SetETHmode(bls.EthModeLatest); err != nil {
+		panic(err)
+	}
+	privateKey := bls.SecretKey{}
+	privateKey.SetByCSPRNG()
+
+	privateKeys := make([]bls.SecretKey, 100)
+	publicKeys := make([]*bls.PublicKey, len(privateKeys))
+	signatures := make([]bls.Sign, len(privateKeys))
+	for i := 0; i < len(privateKeys); i++ {
+		privateKeys[i] = bls.SecretKey{}
+		privateKeys[i].SetByCSPRNG()
+		publicKeys[i] = privateKeys[i].GetPublicKey()
+		signatures[i] = *privateKeys[i].SignByte(Message)
+	}
+
+	for _, sigs := range AggregateNumbers {
+		b.Run(fmt.Sprintf("Signatures Aggregation[%d]", sigs), func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				aggregatedSignature := bls.Sign{}
+				for j := 0; j < sigs; j++ {
+					aggregatedSignature.Aggregate(signatures[:sigs])
+				}
+			}
+		})
+	}
+
+	aggregatedSignatures := make([]*bls.Sign, len(AggregateNumbers))
+	for x, sigs := range AggregateNumbers {
+		aggregatedSignatures[x] = &bls.Sign{}
+		aggregatedSignatures[x].Aggregate(signatures[:sigs])
+		publicKeyEntities := make([]bls.PublicKey, sigs)
+		for i := 0; i < sigs; i++ {
+			publicKeyEntities[i] = *publicKeys[i]
+		}
+		b.Run(fmt.Sprintf("Aggregated Signature Verification[%d]", sigs), func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				aggregatedSignatures[x].FastAggregateVerify(publicKeyEntities[:sigs], Message)
+			}
+		})
+		if !aggregatedSignatures[x].FastAggregateVerify(publicKeyEntities[:sigs], Message) {
+			panic("BLS aggregated signature verification failed!")
+		}
+	}
+
+	for _, keys := range AggregateNumbers {
+		b.Run(fmt.Sprintf("Public Keys Aggregation[%d]", keys), func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				aggregatedPublicKey := bls.PublicKey{}
+				for j := 0; j < keys; j++ {
+					aggregatedPublicKey.Add(publicKeys[j])
+				}
+			}
+		})
+	}
+
+	aggregatedPublicKeys := make([]*bls.PublicKey, len(AggregateNumbers))
+	for x, keys := range AggregateNumbers {
+		aggregatedPublicKeys[x] = &bls.PublicKey{}
+		for j := 0; j < keys; j++ {
+			aggregatedPublicKeys[x].Add(publicKeys[j])
+		}
+		b.Run(fmt.Sprintf("Aggregated Signature Verification[%d] by Aggregated Public Key", keys), func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				aggregatedSignatures[x].VerifyByte(aggregatedPublicKeys[x], Message)
+			}
+		})
+		if !aggregatedSignatures[x].VerifyByte(aggregatedPublicKeys[x], Message) {
+			panic("BLS aggregated signature verification by aggregated public key failed!")
+		}
+	}
+
+	hashes := make([][]byte, len(privateKeys))
+	for i := 0; i < len(privateKeys); i++ {
+		hash := sha256.Sum256([]byte(fmt.Sprintf("hello, workd: %d", i)))
+		hashes[i] = hash[:]
+		signatures[i] = *privateKeys[i].SignHash(hashes[i])
+	}
+
+	for _, sigs := range AggregateNumbers {
+		b.Run(fmt.Sprintf("AggregateSigsForDiffMsg[%d]", sigs), func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				aggregatedSignature := bls.Sign{}
+				for j := 0; j < sigs; j++ {
+					aggregatedSignature.Add(&signatures[j])
+				}
+			}
+		})
+	}
+
+	for _, sigs := range AggregateNumbers {
+		aggregatedSignature := bls.Sign{}
+		pubKeys := make([]bls.PublicKey, sigs)
+		for j := 0; j < sigs; j++ {
+			aggregatedSignature.Add(&signatures[j])
+			pubKeys[j] = *publicKeys[j]
+		}
+		b.Run(fmt.Sprintf("VerifyAggrSigsForDiffMsg[%d]", sigs), func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				aggregatedSignature.VerifyAggregateHashes(pubKeys, hashes[:sigs])
+			}
+		})
+		if !aggregatedSignature.VerifyAggregateHashes(pubKeys, hashes[:sigs]) {
+			panic("BLS aggregated signature verification failed")
+		}
+	}
 }
