@@ -158,9 +158,7 @@ func BenchmarkBLSSignatureAggregation(b *testing.B) {
 		b.Run(fmt.Sprintf("Signatures Aggregation[%d]", sigs), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				aggregatedSignature := bls.Sign{}
-				for j := 0; j < sigs; j++ {
-					aggregatedSignature.Aggregate(signatures[:sigs])
-				}
+				aggregatedSignature.Aggregate(signatures[:sigs])
 			}
 		})
 	}
