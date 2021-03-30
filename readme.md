@@ -11,66 +11,66 @@ See [main.go](main/main.go) for the specific code. The following is the result o
 <p>
 
 ```
-% go test -bench . -benchmem                                     
+% go test -bench . -benchmem
 goos: darwin
 goarch: amd64
 pkg: github.com/herumi/bls-eth-go-binary
-BenchmarkBLS/Key-Pair_Generation-8   	    8041	    159027 ns/op	     320 B/op	       2 allocs/op
-BenchmarkBLS/Sign-8                  	    5258	    237049 ns/op	     176 B/op	       2 allocs/op
-BenchmarkBLS/Verify-8                	    1030	   1150701 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLS/Key-Pair_Generation-8   	    5884	    202213 ns/op	     320 B/op	       2 allocs/op
+BenchmarkBLS/Sign-8                  	    3427	    387399 ns/op	     176 B/op	       2 allocs/op
+BenchmarkBLS/Verify-8                	     751	   1644379 ns/op	      32 B/op	       1 allocs/op
 [BLS] private key: 32 bytes, public key: 96 bytes, signature: 48 bytes
-BenchmarkEd25519/Key-Pair_Generation-8         	   24636	     48917 ns/op	     128 B/op	       3 allocs/op
-BenchmarkEd25519/Sign-8                        	   23485	     48897 ns/op	     448 B/op	       5 allocs/op
-BenchmarkEd25519/Verify-8                      	    8696	    129727 ns/op	     288 B/op	       2 allocs/op
+BenchmarkEd25519/Key-Pair_Generation-8         	   17025	     65943 ns/op	     128 B/op	       3 allocs/op
+BenchmarkEd25519/Sign-8                        	   20230	     58491 ns/op	     448 B/op	       5 allocs/op
+BenchmarkEd25519/Verify-8                      	    8234	    149904 ns/op	     288 B/op	       2 allocs/op
 [Ed25519] private key: 64 bytes, public key: 32 bytes, signature: 64 bytes
-BenchmarkECDSA/Key-Pair_Generation-8           	   79927	     14742 ns/op	     608 B/op	      12 allocs/op
-BenchmarkECDSA/Sign-8                          	   46844	     24362 ns/op	    2673 B/op	      32 allocs/op
-BenchmarkECDSA/Verify-8                        	   15489	     73547 ns/op	     880 B/op	      16 allocs/op
-[ECDSA] private key: 96 bytes, public key: 64 bytes, signature: 64 bytes
-BenchmarkBLSSignatureAggregation/Signatures_Aggregation[1]-8         	11921097	        99.9 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Signatures_Aggregation[2]-8         	  858780	      1398 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Signatures_Aggregation[4]-8         	  150889	      7968 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Signatures_Aggregation[10]-8        	   21208	     54865 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Signatures_Aggregation[21]-8        	    4713	    264312 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Signatures_Aggregation[46]-8        	     834	   1405285 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Signatures_Aggregation[100]-8       	     182	   7263944 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[1]-8         	     996	   1180856 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[2]-8         	    1008	   1173365 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[4]-8         	    1021	   1160625 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[10]-8        	     991	   1189269 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[21]-8        	    1034	   1182553 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[46]-8        	    1014	   1254598 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[100]-8       	     874	   1412549 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[1]-8                   	 9616620	       131 ns/op	     288 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[2]-8                   	  619616	      1883 ns/op	     288 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[4]-8                   	  227913	      5211 ns/op	     288 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[10]-8                  	   77144	     15517 ns/op	     288 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[21]-8                  	   34710	     34714 ns/op	     288 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[46]-8                  	   14841	     82380 ns/op	     288 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[100]-8                 	    6742	    186919 ns/op	     288 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[1]_by_Aggregated_Public_Key-8         	     949	   1160103 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[2]_by_Aggregated_Public_Key-8         	    1086	   1173561 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[4]_by_Aggregated_Public_Key-8         	    1026	   1171737 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[10]_by_Aggregated_Public_Key-8        	    1052	   1139920 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[21]_by_Aggregated_Public_Key-8        	    1076	   1135123 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[46]_by_Aggregated_Public_Key-8        	    1053	   1153195 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[100]_by_Aggregated_Public_Key-8       	    1016	   1154050 ns/op	      32 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[1]-8                                            	11009790	       110 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[2]-8                                            	 1569790	       781 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[4]-8                                            	  594244	      2187 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[10]-8                                           	  195490	      6136 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[21]-8                                           	   88959	     13435 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[46]-8                                           	   39386	     31180 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[100]-8                                          	   17497	     67921 ns/op	     144 B/op	       1 allocs/op
-BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[1]-8                                           	     975	   1235303 ns/op	      64 B/op	       2 allocs/op
-BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[2]-8                                           	     734	   1689306 ns/op	      96 B/op	       2 allocs/op
-BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[4]-8                                           	     502	   2532615 ns/op	     160 B/op	       2 allocs/op
-BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[10]-8                                          	     229	   5027552 ns/op	     352 B/op	       2 allocs/op
-BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[21]-8                                          	     100	  10062170 ns/op	     736 B/op	       2 allocs/op
-BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[46]-8                                          	      61	  20729502 ns/op	    1568 B/op	       2 allocs/op
-BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[100]-8                                         	      26	  45723012 ns/op	    3232 B/op	       2 allocs/op
+BenchmarkECDSA/Key-Pair_Generation-8           	   64735	     17776 ns/op	     608 B/op	      12 allocs/op
+BenchmarkECDSA/Sign-8                          	   40912	     29624 ns/op	    2673 B/op	      32 allocs/op
+BenchmarkECDSA/Verify-8                        	   13507	     86202 ns/op	     880 B/op	      16 allocs/op
+[ECDSA] private key: 95 bytes, public key: 63 bytes, signature: 64 bytes
+BenchmarkBLSSignatureAggregation/Signatures_Aggregation[1]-8         	10897312	       115 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Signatures_Aggregation[2]-8         	 1433745	       830 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Signatures_Aggregation[4]-8         	  494150	      2383 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Signatures_Aggregation[10]-8        	  182233	      7164 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Signatures_Aggregation[21]-8        	   79200	     15652 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Signatures_Aggregation[46]-8        	   33891	     35048 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Signatures_Aggregation[100]-8       	   15133	     80607 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[1]-8         	     784	   1526823 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[2]-8         	     736	   1395230 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[4]-8         	     878	   1452489 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[10]-8        	     835	   1509504 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[21]-8        	     834	   1494399 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[46]-8        	     831	   1535658 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[100]-8       	     708	   1625537 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[1]-8                   	 7220750	       156 ns/op	     288 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[2]-8                   	  546836	      2168 ns/op	     288 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[4]-8                   	  198849	      6242 ns/op	     288 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[10]-8                  	   62683	     18470 ns/op	     288 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[21]-8                  	   29636	     39782 ns/op	     288 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[46]-8                  	   13272	     93353 ns/op	     288 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Public_Keys_Aggregation[100]-8                 	    5840	    208423 ns/op	     288 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[1]_by_Aggregated_Public_Key-8         	     856	   1324273 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[2]_by_Aggregated_Public_Key-8         	     916	   1361653 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[4]_by_Aggregated_Public_Key-8         	     903	   1389915 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[10]_by_Aggregated_Public_Key-8        	     879	   1412366 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[21]_by_Aggregated_Public_Key-8        	     862	   1372903 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[46]_by_Aggregated_Public_Key-8        	     885	   1376454 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/Aggregated_Signature_Verification[100]_by_Aggregated_Public_Key-8       	     879	   1349361 ns/op	      32 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[1]-8                                            	 9442695	       128 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[2]-8                                            	 1378105	       873 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[4]-8                                            	  505824	      2496 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[10]-8                                           	  167084	      7789 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[21]-8                                           	   73917	     16116 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[46]-8                                           	   33160	     36805 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/AggregateSigsForDiffMsg[100]-8                                          	   14854	     82897 ns/op	     144 B/op	       1 allocs/op
+BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[1]-8                                           	     782	   1500140 ns/op	      64 B/op	       2 allocs/op
+BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[2]-8                                           	     597	   1980438 ns/op	      96 B/op	       2 allocs/op
+BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[4]-8                                           	     408	   2961081 ns/op	     160 B/op	       2 allocs/op
+BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[10]-8                                          	     206	   5643624 ns/op	     352 B/op	       2 allocs/op
+BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[21]-8                                          	     100	  11072527 ns/op	     736 B/op	       2 allocs/op
+BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[46]-8                                          	      51	  23527329 ns/op	    1568 B/op	       2 allocs/op
+BenchmarkBLSSignatureAggregation/VerifyAggrSigsForDiffMsg[100]-8                                         	      22	  50250564 ns/op	    3232 B/op	       2 allocs/op
 PASS
-ok  	github.com/herumi/bls-eth-go-binary	72.241s
+ok  	github.com/herumi/bls-eth-go-binary	74.757s
 ```
 
 </p>
@@ -96,11 +96,11 @@ The table above shows that aggregated public key and aggregated signature have t
 
 Follows are the execution times for 1) key-pair generation, 2) signing with a single private key, and 3) verifying a single signature with a single public key by [bls_test.go](https://github.com/torao/sample.bls-signature-aggregation/blob/master/bls_test.go):
 
-| | BLS | Ed25519 | ECDSA (p256) |
-|:----------------|-------------:|----------:|----------:|
-| Key-Pair Generation | 73,486ns            | 46,336ns | 14,711ns |
-| Sign                   | 552,673ns     | 47,036ns           | 23,724ns          |
-| Verify                 | 1,386,782ns | 124,300ns            | 69,779ns          |
+|                     | BLS         | Ed25519   | ECDSA (p256) |
+|:--------------------|------------:|----------:|-------------:|
+| Key-Pair Generation | 202,213ns   | 65,943ns  | 17,776ns     |
+| Sign                | 387,399ns   | 58,491ns  | 29,624ns     |
+| Verify              | 1,644,379ns | 149,904ns | 86,202ns     |
 
 BLS signature is faster than ed25519 and ECDSA in generating key-pair but takes longer to sign and verify.
 
@@ -108,4 +108,4 @@ BLS signature is faster than ed25519 and ECDSA in generating key-pair but takes 
 
 The time for signatures and public keys aggregation increases in proportion to their number. However, the verification for the aggregated signature is completed in constant time.
 
-![2021-03-29 macOS i7 2.8GHz](https://user-images.githubusercontent.com/836654/112778933-9a11bf00-9080-11eb-914d-8641a3479caf.png)
+![2021-03-30 macOS i7 2.8GHz](https://user-images.githubusercontent.com/836654/112939492-88a2e280-9166-11eb-9a14-5b1336885d3b.png)
