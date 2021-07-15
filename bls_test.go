@@ -7,6 +7,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"fmt"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/herumi/bls-go-binary/bls"
 	"math"
 	"testing"
@@ -93,7 +94,7 @@ func BenchmarkEd25519(b *testing.B) {
 		len(privateKey), len(publicKey), len(signature))
 }
 
-func BenchmarkECDSA(b *testing.B) {
+func BenchmarkP256(b *testing.B) {
 
 	p256 := elliptic.P256()
 	seed := rand.Reader
@@ -131,7 +132,50 @@ func BenchmarkECDSA(b *testing.B) {
 		panic("ECDSA verification failed!")
 	}
 
-	fmt.Printf("[ECDSA] private key: %d bytes, public key: %d bytes, signature: %d bytes\n",
+	fmt.Printf("[ECDSA (P-256)] private key: %d bytes, public key: %d bytes, signature: %d bytes\n",
+		len(privateKey.D.Bytes())+len(privateKey.X.Bytes())+len(privateKey.Y.Bytes()),
+		len(publicKey.Y.Bytes())+len(publicKey.X.Bytes()),
+		len(signature))
+}
+
+func BenchmarkSecp256k1(b *testing.B) {
+	secp256k1 := crypto.S256()
+	seed := rand.Reader
+	b.Run("Key-Pair Generation", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			privateKey, _ := ecdsa.GenerateKey(secp256k1, seed)
+			privateKey.Public()
+		}
+	})
+
+	privateKey, err := ecdsa.GenerateKey(secp256k1, seed)
+	if err != nil {
+		panic("ECDSA key generation failed!")
+	}
+	b.Run("Sign", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			ecdsa.Sign(seed, privateKey, Message)
+		}
+	})
+
+	r, s, err := ecdsa.Sign(rand.Reader, privateKey, Message)
+	if err != nil {
+		panic("ECDSA signature failed!")
+	}
+	signature := r.Bytes()
+	signature = append(signature, s.Bytes()...)
+	publicKey := privateKey.Public().(*ecdsa.PublicKey)
+	b.Run("Verify", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			ecdsa.Verify(publicKey, Message, r, s)
+		}
+	})
+
+	if !ecdsa.Verify(publicKey, Message, r, s) {
+		panic("ECDSA verification failed!")
+	}
+
+	fmt.Printf("[ECDSA (secp256k1)] private key: %d bytes, public key: %d bytes, signature: %d bytes\n",
 		len(privateKey.D.Bytes())+len(privateKey.X.Bytes())+len(privateKey.Y.Bytes()),
 		len(publicKey.Y.Bytes())+len(publicKey.X.Bytes()),
 		len(signature))
